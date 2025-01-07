@@ -21,6 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.square').forEach(square => {
     square.addEventListener('click', () => startCountdown(square));
   });
+
+  // Evento para redirigir al pulsar "Reclama tu regalo"
+  const claimButton = document.getElementById('claim-button');
+  claimButton.addEventListener('click', () => {
+    window.location.href = "https://www.powerhands.es/minijuego-regalo-no-visible";
+  });
 });
 
 // Iniciar la cuenta atrás
