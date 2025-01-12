@@ -42,8 +42,6 @@ h1 {
   align-items: center;
   justify-content: center;
   flex-grow: 1; /* Permitir que la cuadrícula ocupe espacio restante */
-  width: 100%; /* Adaptar al ancho del viewport */
-  padding: 0 10px; /* Añadir espaciado en dispositivos pequeños */
 }
 
 .grid {
@@ -52,14 +50,12 @@ h1 {
   gap: 15px;
   justify-content: center;
   align-items: center;
-  width: 100%; /* Adaptar al contenedor */
-  max-width: 500px; /* Limitar el tamaño máximo de la cuadrícula */
 }
 
 /* Estilos de las casillas */
 .square {
-  width: calc(30vw - 10px); /* Adaptar tamaño al ancho del viewport */
-  height: calc(30vw - 10px);
+  width: 110px;
+  height: 110px;
   position: relative;
   perspective: 1000px;
   border-radius: 10px;
@@ -209,27 +205,3 @@ h1 {
 #overlay.active {
   pointer-events: all;
 }
-
-/* Media Queries */
-@media (max-width: 768px) {
-  .grid {
-    gap: 10px;
-  }
-
-  .square {
-    width: calc(25vw - 10px);
-    height: calc(25vw - 10px);
-  }
-}
-
-@media (max-width: 480px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
-
-  .square {
-    width: calc(40vw - 8px);
-    height: calc(40vw - 8px);
-  }
-    }
