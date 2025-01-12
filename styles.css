@@ -149,7 +149,7 @@ h1 {
 }
 
 #congrats h2 {
-  font-size: 70px; /* Tamaño aumentado */
+  font-size: 30px; /* Tamaño reducido proporcional al casillero */
   color: #fff;
   margin: 0;
   padding: 10px;
@@ -159,11 +159,15 @@ h1 {
     0 0 30px rgba(0, 114, 255, 1), 
     0 0 40px rgba(0, 114, 255, 1); /* Contorno luminoso */
   animation: pulse 1.5s infinite alternate;
+  line-height: 1; /* Evita desbordes verticales */
+  white-space: nowrap; /* Asegura que el texto no se divida en líneas */
+  overflow: hidden; /* Evita desbordamientos */
+  text-align: center;
 }
 
 @keyframes pulse {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
+  50% { transform: scale(1.1); }
 }
 
 /* Botón Reclama tu regalo */
