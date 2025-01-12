@@ -2,7 +2,7 @@
 body {
   margin: 0;
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* Asegura disposición vertical */
   align-items: center;
   height: 100vh;
   background: linear-gradient(135deg, #000, #002147); /* Fondo degradado */
@@ -11,22 +11,37 @@ body {
   text-align: center;
 }
 
-.container {
-  text-align: center;
+.title-container {
+  width: fit-content; /* Ajustar al contenido */
+  max-width: 330px; /* Limitar el ancho al tamaño aproximado de la cuadrícula */
+  margin: 0 auto 20px auto; /* Centrar horizontalmente y dar espacio inferior */
+  text-align: center; /* Centrar texto dentro del contenedor */
 }
 
 h1 {
-  margin-bottom: 20px;
-  font-size: 36px;
+  font-size: 28px; /* Mantener tamaño actual */
   color: #fff;
-  text-shadow: 0 0 15px rgba(0, 114, 255, 0.8), 2px 2px 4px rgba(0, 0, 0, 0.7);
-  letter-spacing: 2px;
-  animation: glow 1.5s infinite alternate;
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 20px rgba(255, 255, 255, 0.8),
+    0 0 30px rgba(0, 114, 255, 1),
+    0 0 40px rgba(0, 114, 255, 1); /* Efecto luminoso */
+  letter-spacing: 1.5px; /* Ajustar espaciado para mejorar legibilidad */
+  word-wrap: break-word; /* Permitir texto en varias filas */
+  animation: glow 1.5s infinite alternate; /* Mantener animación */
 }
 
 @keyframes glow {
   0% { text-shadow: 0 0 10px rgba(0, 114, 255, 0.6), 2px 2px 4px rgba(0, 0, 0, 0.7); }
   100% { text-shadow: 0 0 20px rgba(0, 114, 255, 1), 2px 2px 4px rgba(0, 0, 0, 0.7); }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1; /* Permitir que la cuadrícula ocupe espacio restante */
 }
 
 .grid {
@@ -37,6 +52,7 @@ h1 {
   align-items: center;
 }
 
+/* Estilos de las casillas */
 .square {
   width: 110px;
   height: 110px;
@@ -99,24 +115,30 @@ h1 {
   transform: rotateY(180deg);
 }
 
+.square.flipped {
+  box-shadow: 0 0 20px rgba(0, 114, 255, 0.8), 0 0 30px rgba(0, 114, 255, 1);
+  transition: box-shadow 0.5s ease-in-out;
+}
+
+@keyframes glow-increase {
+  0% {
+    box-shadow: 0 0 20px rgba(0, 114, 255, 0.8), 0 0 30px rgba(0, 114, 255, 1);
+  }
+  100% {
+    box-shadow: 0 0 40px rgba(0, 114, 255, 1), 0 0 60px rgba(0, 114, 255, 1);
+  }
+}
+
+.square.final-glow {
+  animation: glow-increase 3s infinite alternate;
+}
+
 /* Ocultar elementos */
 .hidden {
   display: none;
 }
 
-/* Cuenta atrás */
-#countdown {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 200px;
-  font-weight: bold;
-  z-index: 10;
-  pointer-events: none;
-}
-
-/* Enhorabuena */
+/* Mensaje de enhorabuena */
 #congrats {
   position: fixed;
   top: 50%;
@@ -127,10 +149,16 @@ h1 {
 }
 
 #congrats h2 {
-  font-size: 50px;
-  margin-bottom: 20px;
-  animation: pulse 1s infinite;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  font-size: 70px; /* Tamaño aumentado */
+  color: #fff;
+  margin: 0;
+  padding: 10px;
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8), 
+    0 0 20px rgba(255, 255, 255, 0.8), 
+    0 0 30px rgba(0, 114, 255, 1), 
+    0 0 40px rgba(0, 114, 255, 1); /* Contorno luminoso */
+  animation: pulse 1.5s infinite alternate;
 }
 
 @keyframes pulse {
@@ -176,4 +204,4 @@ h1 {
 
 #overlay.active {
   pointer-events: all;
-}
+  }
