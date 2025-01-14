@@ -5,10 +5,10 @@ document.addEventListener('DOMContentLoaded', () => {
     "JUEGO DE BANDAS DE RESISTENCIA",
     "JUEGO DE BANDAS DE RESISTENCIA",
     "JUEGO DE BANDAS DE RESISTENCIA",
-    "JUEGO DE BANDAS DE RESISTENCIA", // Ahora hay 6
+    "JUEGO DE BANDAS DE RESISTENCIA",
     "¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!",
     "¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!",
-    "¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!" // Ahora hay 3
+    "¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!"
   ];
 
   const grid = document.querySelector('.grid');
@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const claimButton = document.getElementById('claim-button');
   const overlay = document.getElementById('overlay');
 
+  let gameLocked = false; // Variable para controlar si las casillas están bloqueadas
   const prizeCount = {};
   const selectedSquares = {};
 
@@ -49,6 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleSquareClick(event) {
+    if (gameLocked) return; // Bloquear interacción si el juego está bloqueado
+
     const square = event.target.closest('.square');
     if (!square || square.classList.contains('flipped')) return;
 
@@ -66,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedSquares[prize].push(square);
 
     if (prizeCount[prize] === 3) {
+      gameLocked = true; // Bloquear interacción desde la tercera casilla ganadora
       suspenseAnimation(prize, square);
     } else {
       square.classList.add('flipped');
@@ -116,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function resetGameState() {
+    gameLocked = false; // Desbloquear el juego al reiniciar
     prizeCount["JUEGO DE BANDAS DE RESISTENCIA"] = 0;
     prizeCount["¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!"] = 0;
     selectedSquares["JUEGO DE BANDAS DE RESISTENCIA"] = [];
