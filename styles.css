@@ -1,153 +1,406 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const phrases = [
-    "JUEGO DE BANDAS DE RESISTENCIA",
-    "JUEGO DE BANDAS DE RESISTENCIA",
-    "JUEGO DE BANDAS DE RESISTENCIA",
-    "JUEGO DE BANDAS DE RESISTENCIA",
-    "JUEGO DE BANDAS DE RESISTENCIA",
-    "JUEGO DE BANDAS DE RESISTENCIA",
-    "¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!",
-    "¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!",
-    "¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!"
-  ];
+/* General */
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #000, #002147);
+  color: #fff;
+  font-family: 'Arial Black', sans-serif;
+  text-align: center;
+}
 
-  const grid = document.querySelector('.grid');
-  const congrats = document.getElementById('congrats');
-  const claimButton = document.getElementById('claim-button');
-  const overlay = document.getElementById('overlay');
+.title-container {
+  width: fit-content;
+  max-width: 330px;
+  margin: 0 auto 20px auto;
+  text-align: center;
+}
 
-  let gameLocked = false; // Variable para controlar si las casillas están bloqueadas
-  const prizeCount = {};
-  const selectedSquares = {};
+h1 {
+  font-size: 28px;
+  color: #fff;
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 20px rgba(255, 255, 255, 0.8),
+    0 0 30px rgba(0, 114, 255, 1),
+    0 0 40px rgba(0, 114, 255, 1);
+  letter-spacing: 1.5px;
+  word-wrap: break-word;
+  animation: glow 1.5s infinite alternate;
+}
 
-  initializeGame();
+@keyframes glow {
+  0% { text-shadow: 0 0 10px rgba(0, 114, 255, 0.6), 2px 2px 4px rgba(0, 0, 0, 0.7); }
+  100% { text-shadow: 0 0 20px rgba(0, 114, 255, 1), 2px 2px 4px rgba(0, 0, 0, 0.7); }
+}
 
-  claimButton.addEventListener('click', () => {
-    window.location.href = "https://www.powerhands.es/minijuego-regalo-no-visible";
-  });
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
 
-  function initializeGame() {
-    resetGameState();
-    generateSquares(9);
-    assignPhrases();
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Estilos de las casillas */
+.square {
+  width: 110px;
+  height: 110px;
+  position: relative;
+  perspective: 1000px;
+  border-radius: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.square:hover {
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.6);
+  transform: scale(1.05);
+}
+
+.square:active {
+  transform: scale(0.95);
+}
+
+.square .inner {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 0.8s;
+}
+
+.square .front,
+.square .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.square .front {
+  background-color: #333;
+}
+
+.square .back {
+  background-color: #fff;
+  color: #000;
+  transform: rotateY(180deg);
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: calc(0.6rem + 0.4vw);
+  line-height: 1.2;
+  overflow: hidden;
+}
+
+.square.flipped .inner {
+  transform: rotateY(180deg);
+}
+
+.square.flipped {
+  box-shadow: 0 0 20px rgba(0, 114, 255, 0.8), 0 0 30px rgba(0, 114, 255, 1);
+  transition: box-shadow 0.5s ease-in-out;
+}
+
+/* Clase para deshabilitar interacción visual */
+.no-interaction .square:hover,
+.no-interaction .square:active {
+  box-shadow: none;
+  transform: none;
+  cursor: default;
+}
+
+/* Mensaje de enhorabuena */
+#congrats {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 15;
+}
+
+#congrats h2 {
+  font-size: 30px;
+  color: #fff;
+  margin: 0;
+  padding: 10px;
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8), 
+    0 0 20px rgba(255, 255, 255, 0.8), 
+    0 0 30px rgba(0, 114, 255, 1), 
+    0 0 40px rgba(0, 114, 255, 1);
+  animation: pulse 1.5s infinite alternate;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Botón Reclama tu regalo */
+#claim-button {
+  margin-top: 20px;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg, #004e92, #000428);
+  border: 2px solid #fff;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+#claim-button:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, #005bb5, #00264d);
+}
+
+#claim-button:active {
+  transform: scale(0.95);
+}
+
+/* Overlay */
+#overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  z-index: 20;
+  pointer-events: none;
+}
+
+#overlay.active {
+  pointer-events: all;
+}/* General */
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column; /* Asegura disposición vertical */
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #000, #002147); /* Fondo degradado */
+  color: #fff;
+  font-family: 'Arial Black', sans-serif;
+  text-align: center;
+}
+
+.title-container {
+  width: fit-content; /* Ajustar al contenido */
+  max-width: 330px; /* Limitar el ancho al tamaño aproximado de la cuadrícula */
+  margin: 0 auto 20px auto; /* Centrar horizontalmente y dar espacio inferior */
+  text-align: center; /* Centrar texto dentro del contenedor */
+}
+
+h1 {
+  font-size: 28px; /* Mantener tamaño actual */
+  color: #fff;
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8),
+    0 0 20px rgba(255, 255, 255, 0.8),
+    0 0 30px rgba(0, 114, 255, 1),
+    0 0 40px rgba(0, 114, 255, 1); /* Efecto luminoso */
+  letter-spacing: 1.5px; /* Ajustar espaciado para mejorar legibilidad */
+  word-wrap: break-word; /* Permitir texto en varias filas */
+  animation: glow 1.5s infinite alternate; /* Mantener animación */
+}
+
+@keyframes glow {
+  0% { text-shadow: 0 0 10px rgba(0, 114, 255, 0.6), 2px 2px 4px rgba(0, 0, 0, 0.7); }
+  100% { text-shadow: 0 0 20px rgba(0, 114, 255, 1), 2px 2px 4px rgba(0, 0, 0, 0.7); }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1; /* Permitir que la cuadrícula ocupe espacio restante */
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Estilos de las casillas */
+.square {
+  width: 110px;
+  height: 110px;
+  position: relative;
+  perspective: 1000px;
+  border-radius: 10px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+}
+
+.square:hover {
+  box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.6);
+  transform: scale(1.05);
+}
+
+.square:active {
+  transform: scale(0.95);
+}
+
+.square .inner {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 0.8s;
+}
+
+.square .front,
+.square .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.square .front {
+  background-color: #333;
+}
+
+.square .back {
+  background-color: #fff;
+  color: #000;
+  transform: rotateY(180deg);
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: calc(0.6rem + 0.4vw);
+  line-height: 1.2;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+
+.square.flipped .inner {
+  transform: rotateY(180deg);
+}
+
+.square.flipped {
+  box-shadow: 0 0 20px rgba(0, 114, 255, 0.8), 0 0 30px rgba(0, 114, 255, 1);
+  transition: box-shadow 0.5s ease-in-out;
+}
+
+@keyframes glow-increase {
+  0% {
+    box-shadow: 0 0 20px rgba(0, 114, 255, 0.8), 0 0 30px rgba(0, 114, 255, 1);
   }
-
-  function generateSquares(count) {
-    grid.innerHTML = '';
-    for (let i = 0; i < count; i++) {
-      const square = document.createElement('div');
-      square.className = 'square';
-      square.innerHTML = `
-        <div class="inner">
-          <div class="front"></div>
-          <div class="back"><span></span></div>
-        </div>
-      `;
-      grid.appendChild(square);
-    }
-
-    grid.addEventListener('click', handleSquareClick);
+  100% {
+    box-shadow: 0 0 40px rgba(0, 114, 255, 1), 0 0 60px rgba(0, 114, 255, 1);
   }
+}
 
-  function handleSquareClick(event) {
-    if (gameLocked) return; // Bloquear interacción si el juego está bloqueado
+.square.final-glow {
+  animation: glow-increase 3s infinite alternate;
+}
 
-    const square = event.target.closest('.square');
-    if (!square || square.classList.contains('flipped')) return;
+/* Ocultar elementos */
+.hidden {
+  display: none;
+}
 
-    revealSquare(square);
+/* Mensaje de enhorabuena */
+#congrats {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 15;
+}
+
+#congrats h2 {
+  font-size: 30px; /* Tamaño reducido proporcional al casillero */
+  color: #fff;
+  margin: 0;
+  padding: 10px;
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.8), 
+    0 0 20px rgba(255, 255, 255, 0.8), 
+    0 0 30px rgba(0, 114, 255, 1), 
+    0 0 40px rgba(0, 114, 255, 1); /* Contorno luminoso */
+  animation: pulse 1.5s infinite alternate;
+  line-height: 1; /* Evita desbordes verticales */
+  white-space: nowrap; /* Asegura que el texto no se divida en líneas */
+  overflow: hidden; /* Evita desbordamientos */
+  text-align: center;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Botón Reclama tu regalo */
+#claim-button {
+  margin-top: 20px;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg, #004e92, #000428);
+  border: 2px solid #fff;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.3s ease, background 0.3s ease;
+}
+
+#claim-button:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, #005bb5, #00264d);
+}
+
+#claim-button:active {
+  transform: scale(0.95);
+}
+
+/* Overlay */
+#overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  z-index: 20;
+  pointer-events: none;
+}
+
+#overlay.active {
+  pointer-events: all;
   }
-
-  function revealSquare(square) {
-    const prize = square.querySelector('.back span').textContent;
-
-    prizeCount[prize] = (prizeCount[prize] || 0) + 1;
-
-    if (!selectedSquares[prize]) {
-      selectedSquares[prize] = [];
-    }
-    selectedSquares[prize].push(square);
-
-    if (prizeCount[prize] === 3) {
-      gameLocked = true; // Bloquear interacción desde la tercera casilla ganadora
-      suspenseAnimation(prize, square);
-    } else {
-      square.classList.add('flipped');
-    }
-  }
-
-  function suspenseAnimation(prize, finalSquare) {
-    const squares = selectedSquares[prize];
-
-    setTimeout(() => {
-      squares[0].classList.add('final-glow');
-    }, 0);
-
-    setTimeout(() => {
-      squares[1].classList.add('final-glow');
-    }, 1500);
-
-    setTimeout(() => {
-      finalSquare.style.boxShadow = "0 0 40px rgba(0, 114, 255, 1)";
-    }, 2000);
-
-    setTimeout(() => {
-      finalSquare.classList.add('flipped');
-      highlightWinningSquares(prize);
-      endGame(prize);
-    }, 3000);
-  }
-
-  function highlightWinningSquares(prize) {
-    const allSquares = document.querySelectorAll('.square');
-    const winningSquares = selectedSquares[prize];
-
-    allSquares.forEach(square => {
-      square.style.opacity = winningSquares.includes(square) ? "1" : "0.3";
-    });
-
-    winningSquares.forEach(square => {
-      square.classList.add('final-glow');
-    });
-  }
-
-  function endGame(prize) {
-    congrats.classList.remove('hidden');
-    setTimeout(() => {
-      claimButton.classList.remove('hidden');
-      overlay.classList.add('active');
-    }, 2000);
-  }
-
-  function resetGameState() {
-    gameLocked = false; // Desbloquear el juego al reiniciar
-    prizeCount["JUEGO DE BANDAS DE RESISTENCIA"] = 0;
-    prizeCount["¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!"] = 0;
-    selectedSquares["JUEGO DE BANDAS DE RESISTENCIA"] = [];
-    selectedSquares["¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!"] = [];
-    document.querySelectorAll('.square').forEach(square => {
-      square.classList.remove('flipped', 'final-glow');
-      square.style.opacity = "1";
-      square.style.boxShadow = "";
-    });
-    congrats.classList.add('hidden');
-    claimButton.classList.add('hidden');
-    overlay.classList.remove('active');
-  }
-
-  function assignPhrases() {
-    const shuffledPhrases = shuffleArray([...phrases]);
-    const squares = document.querySelectorAll('.square .back span');
-    squares.forEach((span, index) => {
-      span.textContent = shuffledPhrases[index];
-    });
-  }
-
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
-});
