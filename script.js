@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
     congrats.classList.remove('hidden');
     prizeImage.src =
       prize === "JUEGO DE BANDAS DE RESISTENCIA"
-        ? "https://raw.githubusercontent.com/APCprograma/MINIJUEGO-WEB2/refs/heads/main/BANDAS%20DE%20RESISTENCIA.png"
-        : "https://raw.githubusercontent.com/APCprograma/MINIJUEGO-WEB2/refs/heads/main/50%25%20DE%20DESCUENTO.png";
+        ? "https://raw.githubusercontent.com/APCprograma/MINIJUEGO-WEB2/main/bandas_de_resistencia.png"
+        : "https://raw.githubusercontent.com/APCprograma/MINIJUEGO-WEB2/main/50_de_descuento.png";
     prizeImageContainer.classList.remove('hidden');
     setTimeout(() => {
       claimButton.classList.remove('hidden');
