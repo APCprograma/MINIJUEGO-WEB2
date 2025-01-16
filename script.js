@@ -14,11 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.querySelector('.grid');
   const congrats = document.getElementById('congrats');
   const claimButton = document.getElementById('claim-button');
-  const prizeImageContainer = document.getElementById('prize-image-container');
-  const prizeImage = document.getElementById('prize-image');
-  const closeImage = document.getElementById('close-image');
+  const overlay = document.getElementById('overlay');
 
-  let gameLocked = false; 
+  let gameLocked = false; // Variable para controlar si las casillas están bloqueadas
   const prizeCount = {};
   const selectedSquares = {};
 
@@ -28,37 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
     window.location.href = "https://www.powerhands.es/minijuego-regalo-no-visible";
   });
 
-  closeImage.addEventListener('click', () => {
-    prizeImageContainer.classList.add('hidden');
-  });
-
   function initializeGame() {
     resetGameState();
     generateSquares(9);
     assignPhrases();
-  }
-
-  function endGame(prize) {
-    congrats.classList.remove('hidden');
-    prizeImage.src =
-      prize === "JUEGO DE BANDAS DE RESISTENCIA"
-        ? "https://raw.githubusercontent.com/APCprograma/MINIJUEGO-WEB2/main/bandas_de_resistencia.png"
-        : "https://raw.githubusercontent.com/APCprograma/MINIJUEGO-WEB2/main/50_de_descuento.png";
-    prizeImageContainer.classList.remove('hidden');
-    setTimeout(() => {
-      claimButton.classList.remove('hidden');
-    }, 2000);
-  }
-
-  function resetGameState() {
-    gameLocked = false;
-    prizeCount["JUEGO DE BANDAS DE RESISTENCIA"] = 0;
-    prizeCount["¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!"] = 0;
-    selectedSquares["JUEGO DE BANDAS DE RESISTENCIA"] = [];
-    selectedSquares["¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!"] = [];
-    congrats.classList.add('hidden');
-    claimButton.classList.add('hidden');
-    prizeImageContainer.classList.add('hidden');
   }
 
   function generateSquares(count) {
@@ -78,16 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
     grid.addEventListener('click', handleSquareClick);
   }
 
-  function assignPhrases() {
-    const shuffledPhrases = shuffleArray([...phrases]);
-    const squares = document.querySelectorAll('.square .back span');
-    squares.forEach((span, index) => {
-      span.textContent = shuffledPhrases[index];
-    });
-  }
-
   function handleSquareClick(event) {
-    if (gameLocked) return;
+    if (gameLocked) return; // Bloquear interacción si el juego está bloqueado
 
     const square = event.target.closest('.square');
     if (!square || square.classList.contains('flipped')) return;
@@ -106,12 +69,33 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedSquares[prize].push(square);
 
     if (prizeCount[prize] === 3) {
-      gameLocked = true;
-      highlightWinningSquares(prize);
-      endGame(prize);
+      gameLocked = true; // Bloquear interacción desde la tercera casilla ganadora
+      suspenseAnimation(prize, square);
     } else {
       square.classList.add('flipped');
     }
+  }
+
+  function suspenseAnimation(prize, finalSquare) {
+    const squares = selectedSquares[prize];
+
+    setTimeout(() => {
+      squares[0].classList.add('final-glow');
+    }, 0);
+
+    setTimeout(() => {
+      squares[1].classList.add('final-glow');
+    }, 1500);
+
+    setTimeout(() => {
+      finalSquare.style.boxShadow = "0 0 40px rgba(0, 114, 255, 1)";
+    }, 2000);
+
+    setTimeout(() => {
+      finalSquare.classList.add('flipped');
+      highlightWinningSquares(prize);
+      endGame(prize);
+    }, 3000);
   }
 
   function highlightWinningSquares(prize) {
@@ -124,6 +108,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     winningSquares.forEach(square => {
       square.classList.add('final-glow');
+    });
+  }
+
+  function endGame(prize) {
+    congrats.classList.remove('hidden');
+    setTimeout(() => {
+      claimButton.classList.remove('hidden');
+      overlay.classList.add('active');
+    }, 2000);
+  }
+
+  function resetGameState() {
+    gameLocked = false; // Desbloquear el juego al reiniciar
+    prizeCount["JUEGO DE BANDAS DE RESISTENCIA"] = 0;
+    prizeCount["¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!"] = 0;
+    selectedSquares["JUEGO DE BANDAS DE RESISTENCIA"] = [];
+    selectedSquares["¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!"] = [];
+    document.querySelectorAll('.square').forEach(square => {
+      square.classList.remove('flipped', 'final-glow');
+      square.style.opacity = "1";
+      square.style.boxShadow = "";
+    });
+    congrats.classList.add('hidden');
+    claimButton.classList.add('hidden');
+    overlay.classList.remove('active');
+  }
+
+  function assignPhrases() {
+    const shuffledPhrases = shuffleArray([...phrases]);
+    const squares = document.querySelectorAll('.square .back span');
+    squares.forEach((span, index) => {
+      span.textContent = shuffledPhrases[index];
     });
   }
 
