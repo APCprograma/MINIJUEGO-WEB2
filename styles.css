@@ -2,33 +2,29 @@
 body {
   margin: 0;
   display: flex;
-  flex-direction: column; /* Asegura disposición vertical */
+  flex-direction: column;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(135deg, #000, #002147); /* Fondo degradado */
+  background: linear-gradient(135deg, #000, #002147);
   color: #fff;
   font-family: 'Arial Black', sans-serif;
   text-align: center;
 }
 
 .title-container {
-  width: fit-content; /* Ajustar al contenido */
-  max-width: 330px; /* Limitar el ancho al tamaño aproximado de la cuadrícula */
-  margin: 0 auto 20px auto; /* Centrar horizontalmente y dar espacio inferior */
-  text-align: center; /* Centrar texto dentro del contenedor */
+  width: fit-content;
+  max-width: 330px;
+  margin: 0 auto 20px auto;
+  text-align: center;
 }
 
 h1 {
-  font-size: 28px; /* Mantener tamaño actual */
+  font-size: 28px;
   color: #fff;
-  text-shadow: 
-    0 0 10px rgba(255, 255, 255, 0.8),
-    0 0 20px rgba(255, 255, 255, 0.8),
-    0 0 30px rgba(0, 114, 255, 1),
-    0 0 40px rgba(0, 114, 255, 1); /* Efecto luminoso */
-  letter-spacing: 1.5px; /* Ajustar espaciado para mejorar legibilidad */
-  word-wrap: break-word; /* Permitir texto en varias filas */
-  animation: glow 1.5s infinite alternate; /* Mantener animación */
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(0, 114, 255, 1), 0 0 40px rgba(0, 114, 255, 1);
+  letter-spacing: 1.5px;
+  word-wrap: break-word;
+  animation: glow 1.5s infinite alternate;
 }
 
 @keyframes glow {
@@ -41,7 +37,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-grow: 1; /* Permitir que la cuadrícula ocupe espacio restante */
+  flex-grow: 1;
 }
 
 .grid {
@@ -52,7 +48,6 @@ h1 {
   align-items: center;
 }
 
-/* Estilos de las casillas */
 .square {
   width: 110px;
   height: 110px;
@@ -60,7 +55,7 @@ h1 {
   perspective: 1000px;
   border-radius: 10px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .square:hover {
@@ -72,140 +67,43 @@ h1 {
   transform: scale(0.95);
 }
 
-.square .inner {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  transform-style: preserve-3d;
-  transition: transform 0.8s;
-}
-
-.square .front,
-.square .back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 5px;
-  box-sizing: border-box;
-  border-radius: 10px;
-}
-
-.square .front {
-  background-color: #333;
-}
-
-.square .back {
-  background-color: #fff;
-  color: #000;
-  transform: rotateY(180deg);
-  font-weight: bold;
-  text-transform: uppercase;
-  font-size: calc(0.6rem + 0.4vw);
-  line-height: 1.2;
-  word-wrap: break-word;
-  overflow: hidden;
-}
-
-.square.flipped .inner {
-  transform: rotateY(180deg);
-}
-
-.square.flipped {
-  box-shadow: 0 0 20px rgba(0, 114, 255, 0.8), 0 0 30px rgba(0, 114, 255, 1);
-  transition: box-shadow 0.5s ease-in-out;
-}
-
-@keyframes glow-increase {
-  0% {
-    box-shadow: 0 0 20px rgba(0, 114, 255, 0.8), 0 0 30px rgba(0, 114, 255, 1);
-  }
-  100% {
-    box-shadow: 0 0 40px rgba(0, 114, 255, 1), 0 0 60px rgba(0, 114, 255, 1);
-  }
-}
-
-.square.final-glow {
-  animation: glow-increase 3s infinite alternate;
-}
-
-/* Ocultar elementos */
 .hidden {
   display: none;
 }
 
-/* Mensaje de enhorabuena */
-#congrats {
+/* Premio */
+#prize-image-container {
   position: fixed;
-  top: 50%;
+  top: 60%;
   left: 50%;
   transform: translate(-50%, -50%);
-  text-align: center;
-  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 25;
 }
 
-#congrats h2 {
-  font-size: 30px; /* Tamaño reducido proporcional al casillero */
-  color: #fff;
-  margin: 0;
-  padding: 10px;
-  text-shadow: 
-    0 0 10px rgba(255, 255, 255, 0.8), 
-    0 0 20px rgba(255, 255, 255, 0.8), 
-    0 0 30px rgba(0, 114, 255, 1), 
-    0 0 40px rgba(0, 114, 255, 1); /* Contorno luminoso */
-  animation: pulse 1.5s infinite alternate;
-  line-height: 1; /* Evita desbordes verticales */
-  white-space: nowrap; /* Asegura que el texto no se divida en líneas */
-  overflow: hidden; /* Evita desbordamientos */
-  text-align: center;
+#prize-image {
+  max-width: 80%;
+  max-height: 50%;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-}
-
-/* Botón Reclama tu regalo */
-#claim-button {
-  margin-top: 20px;
-  padding: 15px 30px;
-  font-size: 18px;
-  font-weight: bold;
-  color: #fff;
-  background: linear-gradient(135deg, #004e92, #000428);
-  border: 2px solid #fff;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  cursor: pointer;
-  transition: transform 0.3s ease, background 0.3s ease;
-}
-
-#claim-button:hover {
-  transform: scale(1.1);
-  background: linear-gradient(135deg, #005bb5, #00264d);
-}
-
-#claim-button:active {
-  transform: scale(0.95);
-}
-
-/* Overlay */
-#overlay {
+#close-image {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: transparent;
-  z-index: 20;
-  pointer-events: none;
+  top: 5px;
+  right: 10px;
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.3s ease;
 }
 
-#overlay.active {
-  pointer-events: all;
-  }
+#close-image:hover {
+  background: rgba(255, 0, 0, 0.7);
+}
