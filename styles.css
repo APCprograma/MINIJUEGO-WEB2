@@ -2,33 +2,33 @@
 body {
   margin: 0;
   display: flex;
-  flex-direction: column; /* Asegura disposición vertical */
+  flex-direction: column;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(135deg, #000, #002147); /* Fondo degradado */
+  background: linear-gradient(135deg, #000, #002147);
   color: #fff;
   font-family: 'Arial Black', sans-serif;
   text-align: center;
 }
 
 .title-container {
-  width: fit-content; /* Ajustar al contenido */
-  max-width: 330px; /* Limitar el ancho al tamaño aproximado de la cuadrícula */
-  margin: 0 auto 20px auto; /* Centrar horizontalmente y dar espacio inferior */
-  text-align: center; /* Centrar texto dentro del contenedor */
+  width: fit-content;
+  max-width: 330px;
+  margin: 0 auto 20px auto;
+  text-align: center;
 }
 
 h1 {
-  font-size: 28px; /* Mantener tamaño actual */
+  font-size: 28px;
   color: #fff;
   text-shadow: 
     0 0 10px rgba(255, 255, 255, 0.8),
     0 0 20px rgba(255, 255, 255, 0.8),
     0 0 30px rgba(0, 114, 255, 1),
-    0 0 40px rgba(0, 114, 255, 1); /* Efecto luminoso */
-  letter-spacing: 1.5px; /* Ajustar espaciado para mejorar legibilidad */
-  word-wrap: break-word; /* Permitir texto en varias filas */
-  animation: glow 1.5s infinite alternate; /* Mantener animación */
+    0 0 40px rgba(0, 114, 255, 1);
+  letter-spacing: 1.5px;
+  word-wrap: break-word;
+  animation: glow 1.5s infinite alternate;
 }
 
 @keyframes glow {
@@ -41,7 +41,7 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-grow: 1; /* Permitir que la cuadrícula ocupe espacio restante */
+  flex-grow: 1;
 }
 
 .grid {
@@ -60,7 +60,7 @@ h1 {
   perspective: 1000px;
   border-radius: 10px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .square:hover {
@@ -105,10 +105,23 @@ h1 {
   transform: rotateY(180deg);
   font-weight: bold;
   text-transform: uppercase;
-  font-size: calc(0.6rem + 0.4vw);
+  font-size: calc(0.5rem + 0.3vw); /* 🔹 Se redujo el tamaño del texto */
   line-height: 1.2;
   word-wrap: break-word;
   overflow: hidden;
+}
+
+/* 🔹 Estilos ajustados para mejorar contraste */
+.square .back span {
+  font-size: 18px; /* 🔹 Se redujo el tamaño del texto */
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #000; /* 🔹 Ahora el texto siempre será negro */
+}
+
+.square.flipped .back span {
+  color: #000; /* 🔹 Se mantiene negro también después de voltear */
 }
 
 .square.flipped .inner {
@@ -149,7 +162,7 @@ h1 {
 }
 
 #congrats h2 {
-  font-size: 30px; /* Tamaño reducido proporcional al casillero */
+  font-size: 30px;
   color: #fff;
   margin: 0;
   padding: 10px;
@@ -157,11 +170,11 @@ h1 {
     0 0 10px rgba(255, 255, 255, 0.8), 
     0 0 20px rgba(255, 255, 255, 0.8), 
     0 0 30px rgba(0, 114, 255, 1), 
-    0 0 40px rgba(0, 114, 255, 1); /* Contorno luminoso */
+    0 0 40px rgba(0, 114, 255, 1);
   animation: pulse 1.5s infinite alternate;
-  line-height: 1; /* Evita desbordes verticales */
-  white-space: nowrap; /* Asegura que el texto no se divida en líneas */
-  overflow: hidden; /* Evita desbordamientos */
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
   text-align: center;
 }
 
@@ -208,4 +221,4 @@ h1 {
 
 #overlay.active {
   pointer-events: all;
-}
+  }
