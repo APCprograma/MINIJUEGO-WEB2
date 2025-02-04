@@ -1,24 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const phrases = [
-    "JUEGO DE BANDAS DE RESISTENCIA",
-    "JUEGO DE BANDAS DE RESISTENCIA",
-    "JUEGO DE BANDAS DE RESISTENCIA",
-    "JUEGO DE BANDAS DE RESISTENCIA",
-    "JUEGO DE BANDAS DE RESISTENCIA",
-    "JUEGO DE BANDAS DE RESISTENCIA",
-    "¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!",
-    "¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!",
-    "¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!"
-  ];
-
   const grid = document.querySelector('.grid');
   const congrats = document.getElementById('congrats');
   const claimButton = document.getElementById('claim-button');
   const overlay = document.getElementById('overlay');
 
-  let gameLocked = false; // Variable para controlar si las casillas están bloqueadas
-  const prizeCount = {};
-  const selectedSquares = {};
+  let gameLocked = false;
+  let selectedCount = 0;
+  let premiumCount = 0;
+  let normalCount = 0;
 
   initializeGame();
 
@@ -29,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function initializeGame() {
     resetGameState();
     generateSquares(9);
-    assignPhrases();
   }
 
   function generateSquares(count) {
@@ -50,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function handleSquareClick(event) {
-    if (gameLocked) return; // Bloquear interacción si el juego está bloqueado
+    if (gameLocked) return;
 
     const square = event.target.closest('.square');
     if (!square || square.classList.contains('flipped')) return;
@@ -59,59 +47,52 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function revealSquare(square) {
-    const prize = square.querySelector('.back span').textContent;
+    let prize = getRandomPrize();
+    square.querySelector('.back span').textContent = prize;
+    square.classList.add('flipped');
 
-    prizeCount[prize] = (prizeCount[prize] || 0) + 1;
-
-    if (!selectedSquares[prize]) {
-      selectedSquares[prize] = [];
-    }
-    selectedSquares[prize].push(square);
-
-    if (prizeCount[prize] === 3) {
-      gameLocked = true; // Bloquear interacción desde la tercera casilla ganadora
-      suspenseAnimation(prize, square);
+    if (prize === "REGALO PREMIUM") {
+      premiumCount++;
     } else {
-      square.classList.add('flipped');
+      normalCount++;
+    }
+
+    selectedCount++;
+
+    if (premiumCount === 3) {
+      gameLocked = true;
+      highlightWinningSquares();
+      endGame();
     }
   }
 
-  function suspenseAnimation(prize, finalSquare) {
-    const squares = selectedSquares[prize];
-
-    setTimeout(() => {
-      squares[0].classList.add('final-glow');
-    }, 0);
-
-    setTimeout(() => {
-      squares[1].classList.add('final-glow');
-    }, 1500);
-
-    setTimeout(() => {
-      finalSquare.style.boxShadow = "0 0 40px rgba(0, 114, 255, 1)";
-    }, 2000);
-
-    setTimeout(() => {
-      finalSquare.classList.add('flipped');
-      highlightWinningSquares(prize);
-      endGame(prize);
-    }, 3000);
+  function getRandomPrize() {
+    if (normalCount === 2) {
+      return "REGALO PREMIUM";
+    }
+    return Math.random() < 0.7 ? "REGALO NORMAL" : "REGALO PREMIUM";
   }
 
-  function highlightWinningSquares(prize) {
-    const allSquares = document.querySelectorAll('.square');
-    const winningSquares = selectedSquares[prize];
-
-    allSquares.forEach(square => {
-      square.style.opacity = winningSquares.includes(square) ? "1" : "0.3";
-    });
-
-    winningSquares.forEach(square => {
-      square.classList.add('final-glow');
+  function highlightWinningSquares() {
+    document.querySelectorAll('.square.flipped').forEach(square => {
+      const text = square.querySelector('.back span').textContent;
+      if (text === "REGALO PREMIUM") {
+        applyHeartbeatEffect(square);
+      }
     });
   }
 
-  function endGame(prize) {
+  function applyHeartbeatEffect(square) {
+    let grow = true;
+
+    setInterval(() => {
+      if (!gameLocked) return; // Evitar que siga el efecto si el juego se reinicia
+      square.style.transform = grow ? "scale(1.1)" : "scale(1.0)";
+      grow = !grow;
+    }, 300); // 🔹 Se redujo el tiempo de 500ms a 300ms para mayor velocidad
+  }
+
+  function endGame() {
     congrats.classList.remove('hidden');
     setTimeout(() => {
       claimButton.classList.remove('hidden');
@@ -120,34 +101,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function resetGameState() {
-    gameLocked = false; // Desbloquear el juego al reiniciar
-    prizeCount["JUEGO DE BANDAS DE RESISTENCIA"] = 0;
-    prizeCount["¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!"] = 0;
-    selectedSquares["JUEGO DE BANDAS DE RESISTENCIA"] = [];
-    selectedSquares["¡50% DE DESCUENTO EN TU PRÓXIMO PEDIDO!"] = [];
+    gameLocked = false;
+    selectedCount = 0;
+    premiumCount = 0;
+    normalCount = 0;
     document.querySelectorAll('.square').forEach(square => {
       square.classList.remove('flipped', 'final-glow');
       square.style.opacity = "1";
-      square.style.boxShadow = "";
+      square.style.transform = "scale(1.0)"; // Resetear transformación
+      square.querySelector('.back span').textContent = "";
     });
     congrats.classList.add('hidden');
     claimButton.classList.add('hidden');
     overlay.classList.remove('active');
-  }
-
-  function assignPhrases() {
-    const shuffledPhrases = shuffleArray([...phrases]);
-    const squares = document.querySelectorAll('.square .back span');
-    squares.forEach((span, index) => {
-      span.textContent = shuffledPhrases[index];
-    });
-  }
-
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
   }
 });
